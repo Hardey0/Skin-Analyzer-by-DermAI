@@ -13,8 +13,7 @@
 </head>
 
 <body>
-    <iframe src="https://Hardey067-DermAI-Skin-Detector.hf.space" width="100%" height="800px" style="border: none;">
-    </iframe>
+    
     <!-- Animated Background -->
     <div class="bg-animation">
         <div class="floating-shapes">
@@ -44,22 +43,24 @@
             <h2 class="upload-title">
                 <i class="fas fa-upload"></i> Upload Your Image
             </h2>
-            <form class="upload-form" action="/predict" method="post" enctype="multipart/form-data" id="uploadForm">
-                <div class="file-upload-container">
-                    <input type="file" id="fileInput" name="image" class="file-input" accept="image/*" required>
-                    <label for="fileInput" class="file-upload-btn" id="uploadBtn">
-                        <i class="fas fa-cloud-upload-alt upload-icon"></i>
-                        <div class="upload-text">
-                            <strong>Choose Image</strong>
-                            <div class="upload-hint">or drag and drop here</div>
-                        </div>
-                    </label>
-                    <div class="file-name" id="fileName"></div>
-                </div>
-                <button type="submit" class="diagnose-btn" id="diagnoseBtn">
-                    <i class="fas fa-search"></i> Diagnose Now
-                </button>
-            </form>
+          <form class="upload-form" id="uploadForm">
+    <div class="file-upload-container">
+        <input type="file" id="fileInput" name="image" class="file-input" accept="image/*" required>
+        <label for="fileInput" class="file-upload-btn" id="uploadBtn">
+            <i class="fas fa-cloud-upload-alt upload-icon"></i>
+            <div class="upload-text">
+                <strong>Choose Image</strong>
+                <div class="upload-hint">or drag and drop here</div>
+            </div>
+        </label>
+        <div class="file-name" id="fileName"></div>
+    </div>
+    <button type="submit" class="diagnose-btn" id="diagnoseBtn">
+        <i class="fas fa-search"></i> Diagnose Now
+    </button>
+    <div id="predictionResult" style="margin-top: 20px; font-weight: bold; color: #333;"></div>
+  </form>
+
         </div>
 
         <!-- How It Works Section -->
@@ -205,23 +206,40 @@
         });
 
         // Form submission with loading animation
-        uploadForm.addEventListener('submit', function (e) {
-            e.preventDefault();
+uploadForm.addEventListener('submit', function (e) {
+    e.preventDefault();
 
-            if (!fileInput.files[0]) {
-                alert('Please select an image first!');
-                return;
-            }
+    const file = fileInput.files[0];
+    if (!file) {
+        alert('Please select an image first!');
+        return;
+    }
 
-            // Show loading overlay
-            loadingOverlay.style.display = 'flex';
+    loadingOverlay.style.display = 'flex';
 
-            // Simulate analysis time (5 seconds) then submit
-            setTimeout(() => {
-                // Actually submit the form
-                uploadForm.submit();
-            }, 5000);
-        });
+    const reader = new FileReader();
+    reader.onloadend = async () => {
+        const base64Image = reader.result.split(',')[1]; // Remove the prefix
+        try {
+            const response = await fetch("https://hardey067-dermai-skin-detector.hf.space/run/predict", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ data: [`data:image/jpeg;base64,${base64Image}`] })
+            });
+
+            const result = await response.json();
+            const prediction = result.data?.[0] || "No prediction returned.";
+
+            document.getElementById("predictionResult").textContent = prediction;
+        } catch (error) {
+            document.getElementById("predictionResult").textContent = "Error: " + error.message;
+        } finally {
+            loadingOverlay.style.display = 'none';
+        }
+    };
+
+    reader.readAsDataURL(file);
+});
 
         // Add some interactive animations
         document.addEventListener('DOMContentLoaded', function () {
