@@ -206,6 +206,7 @@
         });
 
         // Form submission with loading animation
+// Form submission with loading animation
 uploadForm.addEventListener('submit', function (e) {
     e.preventDefault();
 
@@ -228,11 +229,25 @@ uploadForm.addEventListener('submit', function (e) {
             });
 
             const result = await response.json();
-            const prediction = result.data?.[0] || "No prediction returned.";
 
-            document.getElementById("predictionResult").textContent = prediction;
+            // Handle data gracefully
+            const prediction = result.prediction || result.data?.[0] || "No prediction returned";
+            const image_url = result.image_url || "default_image.jpg";
+            const heatmap_url = result.heatmap_url || "default_heatmap.jpg";
+            const alt_1 = result.alt_1 || "Alternative 1";
+            const alt_2 = result.alt_2 || "Alternative 2";
+
+            // Save results to localStorage
+            localStorage.setItem("prediction", prediction);
+            localStorage.setItem("image_url", image_url);
+            localStorage.setItem("heatmap_url", heatmap_url);
+            localStorage.setItem("alt_1", alt_1);
+            localStorage.setItem("alt_2", alt_2);
+
+            // Navigate to result page
+            window.location.href = "result.html";
         } catch (error) {
-            document.getElementById("predictionResult").textContent = "Error: " + error.message;
+            alert("Error: " + error.message);
         } finally {
             loadingOverlay.style.display = 'none';
         }
@@ -240,6 +255,7 @@ uploadForm.addEventListener('submit', function (e) {
 
     reader.readAsDataURL(file);
 });
+
 
         // Add some interactive animations
         document.addEventListener('DOMContentLoaded', function () {
