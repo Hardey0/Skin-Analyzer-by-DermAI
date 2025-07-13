@@ -232,14 +232,15 @@ uploadForm.addEventListener('submit', function (e) {
 
             // Handle data gracefully
             const prediction = result.prediction || result.data?.[0] || "No prediction returned";
-            const image_url = result.image_url || "default_image.jpg";
+            const image_url = reader.result; // Save uploaded image preview as base64
+
             const heatmap_url = result.heatmap_url || "default_heatmap.jpg";
             const alt_1 = result.alt_1 || "Alternative 1";
             const alt_2 = result.alt_2 || "Alternative 2";
 
             // Save results to localStorage
             localStorage.setItem("prediction", prediction);
-            localStorage.setItem("image_url", image_url);
+            localStorage.setItem("image_url", reader.result)
             localStorage.setItem("heatmap_url", heatmap_url);
             localStorage.setItem("alt_1", alt_1);
             localStorage.setItem("alt_2", alt_2);
