@@ -96,3 +96,4 @@ def predict():
 
 if __name__ == "__main__":
     app.run(debug=True)
+    https://github.com/Hardey0/Skin-Analyzer-by-DermAI

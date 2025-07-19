@@ -1,17 +1,21 @@
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DermAI - Skin Disease Detection</title>
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='der.png') }}">
+   
 
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='index.css') }}">
-   
+
 </head>
+
 <body>
+   
+    </iframe>
     <!-- Animated Background -->
     <div class="bg-animation">
         <div class="floating-shapes">
@@ -30,7 +34,7 @@
         </div>
         <div class="tagline">AI-Powered Skin Disease Detection</div>
         <div class="subtitle">
-            Get instant, accurate skin condition analysis using advanced machine learning technology. 
+            Get instant, accurate skin condition analysis using advanced machine learning technology.
             Upload a photo and receive professional-grade insights in seconds.
         </div>
     </div>
@@ -156,17 +160,17 @@
         const diagnoseBtn = document.getElementById('diagnoseBtn');
 
         // File input change handler
-        fileInput.addEventListener('change', function(e) {
+        fileInput.addEventListener('change', function (e) {
             const file = e.target.files[0];
             if (file) {
                 fileName.textContent = `Selected: ${file.name}`;
                 fileName.style.display = 'block';
                 uploadBtn.classList.add('pulse');
-                
+
                 // Show preview if it's an image
                 if (file.type.startsWith('image/')) {
                     const reader = new FileReader();
-                    reader.onload = function(e) {
+                    reader.onload = function (e) {
                         uploadBtn.style.backgroundImage = `url(${e.target.result})`;
                         uploadBtn.style.backgroundSize = 'cover';
                         uploadBtn.style.backgroundPosition = 'center';
@@ -178,19 +182,19 @@
         });
 
         // Drag and drop functionality
-        uploadBtn.addEventListener('dragover', function(e) {
+        uploadBtn.addEventListener('dragover', function (e) {
             e.preventDefault();
             uploadBtn.style.borderColor = '#5a6fd8';
             uploadBtn.style.background = 'linear-gradient(135deg, #e8f0ff 0%, #d0e4ff 100%)';
         });
 
-        uploadBtn.addEventListener('dragleave', function(e) {
+        uploadBtn.addEventListener('dragleave', function (e) {
             e.preventDefault();
             uploadBtn.style.borderColor = '#667eea';
             uploadBtn.style.background = 'linear-gradient(135deg, #f8f9ff 0%, #e8f0ff 100%)';
         });
 
-        uploadBtn.addEventListener('drop', function(e) {
+        uploadBtn.addEventListener('drop', function (e) {
             e.preventDefault();
             const files = e.dataTransfer.files;
             if (files.length > 0) {
@@ -202,9 +206,9 @@
         });
 
         // Form submission with loading animation
-        uploadForm.addEventListener('submit', function(e) {
+        uploadForm.addEventListener('submit', function (e) {
             e.preventDefault();
-            
+
             if (!fileInput.files[0]) {
                 alert('Please select an image first!');
                 return;
@@ -212,7 +216,7 @@
 
             // Show loading overlay
             loadingOverlay.style.display = 'flex';
-            
+
             // Simulate analysis time (5 seconds) then submit
             setTimeout(() => {
                 // Actually submit the form
@@ -221,10 +225,10 @@
         });
 
         // Add some interactive animations
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Animate cards on scroll
             const cards = document.querySelectorAll('.step-card, .feature-card');
-            
+
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
@@ -267,9 +271,9 @@
             particle.style.left = Math.random() * window.innerWidth + 'px';
             particle.style.top = '-10px';
             particle.style.animation = 'fall 3s linear forwards';
-            
+
             document.body.appendChild(particle);
-            
+
             setTimeout(() => {
                 particle.remove();
             }, 3000);
@@ -291,5 +295,5 @@
         document.head.appendChild(particleStyle);
     </script>
 </body>
-</html>
 
+</html>
