@@ -9,6 +9,8 @@ from PIL import Image
 from torchcam.methods import SmoothGradCAMpp
 from torchcam.utils import overlay_mask
 from torchvision.transforms.functional import to_pil_image
+import requests
+from io import BytesIO
 
 # Flask setup
 app = Flask(__name__)
@@ -20,7 +22,10 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = models.resnet18(weights=None)
 model.fc = nn.Linear(model.fc.in_features, 7)  # 7 skin classes
-model.load_state_dict(torch.load("model/best_model.pth", map_location=device))
+# model.load_state_dict(torch.load("model/best_model.pth", map_location=device))
+hf_url = "https://huggingface.co/Hardey067/skin-analyzer-model/resolve/main/model/best_model.pth"
+response = requests.get(hf_url)
+model.load_state_dict(torch.load(BytesIO(response.content), map_location=device))
 model.to(device)
 model.eval()
 
