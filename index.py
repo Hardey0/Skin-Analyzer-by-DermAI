@@ -1,3 +1,4 @@
+from io import BytesIO
 import os
 import random
 from flask import Flask, render_template, request
@@ -10,7 +11,6 @@ from torchcam.methods import SmoothGradCAMpp
 from torchcam.utils import overlay_mask
 from torchvision.transforms.functional import to_pil_image
 import requests
-from io import BytesIO
 
 # Flask setup
 app = Flask(__name__)
@@ -23,9 +23,14 @@ device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 model = models.resnet18(weights=None)
 model.fc = nn.Linear(model.fc.in_features, 7)  # 7 skin classes
 # model.load_state_dict(torch.load("model/best_model.pth", map_location=device))
-hf_url = "https://huggingface.co/Hardey067/skin-analyzer-model/resolve/main/model/best_model.pth"
-response = requests.get(hf_url)
-model.load_state_dict(torch.load(BytesIO(response.content), map_location=device))
+try:
+    hf_url = "https://huggingface.co/Hardey067/skin-analyzer-model/resolve/main/model/best_model.pth"
+    response = requests.get(hf_url)
+    response.raise_for_status()  # catches 404, etc.
+    model.load_state_dict(torch.load(BytesIO(response.content), map_location=device))
+except Exception as e:
+    print("Model loading failed:", e)
+
 model.to(device)
 model.eval()
 
