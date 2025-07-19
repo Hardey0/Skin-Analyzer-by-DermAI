@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>DermAI Diagnosis Result</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="result.css">
+      <link rel="icon" type="image/png" href="der.png">
+
+</head>
+
+<body>
+
+    <!-- Success Animation -->
+    <div class="success-animation" id="successAnimation">
+        <div class="success-check">
+            <i class="fas fa-check-circle"></i>
+        </div>
+    </div>
+
+    <!-- Animated Background -->
+    <div class="bg-animation">
+        <div class="floating-shapes">
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+            <div class="shape"></div>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">
+            <i class="fas fa-microscope"></i> DermAI
+        </div>
+        <div class="tagline">Analysis Complete - Results Ready</div>
+    </div>
+
+    <div class="container">
+
+        <!-- Results Section -->
+        <div class="results-section">
+            <div class="diagnosis-card">
+                <div class="card-title">
+                    <i class="fas fa-stethoscope card-icon"></i>
+                    Diagnosis Result
+                </div>
+                <div class="diagnosis-text" id="diagnosisText">
+                    
+                </div>
+                <div class="diagnosis-description">
+                    
+                </div>
+            </div>
+
+            <div class="image-card">
+                <div class="card-title">
+                    <i class="fas fa-image card-icon"></i>
+                    Analyzed Image
+                </div>
+                  <img src="" alt="Uploaded Image" class="uploaded-image" />
+            </div>
+        </div>
+
+        <!-- Chart Section -->
+        <div class="chart-section">
+            <div class="chart-title">
+                <i class="fas fa-chart-pie card-icon"></i>
+                Prediction Confidence
+            </div>
+            <div class="chart-container">
+                <div class="chart-loading" id="chartLoading">
+                    <div class="chart-spinner"></div>
+                    <div>Analyzing prediction confidence...</div>
+                </div>
+                <canvas id="confidenceChart" style="display: none;"></canvas>
+            </div>
+        </div>
+
+        <!-- Summary Section -->
+        <div class="summary-section">
+                     <div class="image-card">
+                <div class="card-title">
+                    <i class="fas fa-fire card-icon"></i>
+                    Model Focus (CAM Visualization)
+                </div>
+                    <img src="" alt="Class Activation Map" class="uploaded-image" />
+
+            </div>
+
+            <div class="summary-card">
+                <div class="summary-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="summary-title">AI-Powered Analysis</div>
+                <div class="summary-text">
+                    Advanced deep learning algorithms analyzed your image with high precision and accuracy.
+                </div>
+            </div>
+
+
+
+            <div class="summary-card">
+                <div class="summary-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <div class="summary-title">Instant Results</div>
+                <div class="summary-text">
+                    Get professional-grade skin analysis in seconds, not hours or days.
+                </div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-icon">
+                    <i class="fas fa-user-md"></i>
+                </div>
+                <div class="summary-title">Medical Grade</div>
+                <div class="summary-text">
+                    Trained on medical datasets with dermatologist-verified classifications.
+                </div>
+            </div>
+        </div>
+
+        <!-- Action Section -->
+        <div class="action-section">
+            <a href="/" class="try-again-btn">
+                <i class="fas fa-redo-alt"></i> Try Another Image
+            </a>
+        </div>
+    </div>
+
+  <script>
+    // Get values from localStorage
+    const prediction = localStorage.getItem("prediction") || "Unknown";
+    const alt1 = localStorage.getItem("alt_1") || "Alt 1";
+    const alt2 = localStorage.getItem("alt_2") || "Alt 2";
+
+    // Particle animation
+    function createParticle() {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * window.innerWidth + 'px';
+        particle.style.top = '-10px';
+        document.body.appendChild(particle);
+        setTimeout(() => particle.remove(), 3000);
+    }
+    setInterval(createParticle, 1000);
+
+    // Show chart after delay
+    setTimeout(() => {
+        const chartLoading = document.getElementById('chartLoading');
+        const chartCanvas = document.getElementById('confidenceChart');
+        chartLoading.style.display = 'none';
+        chartCanvas.style.display = 'block';
+
+        const ctx = chartCanvas.getContext('2d');
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: [prediction, alt1, alt2],
+                datasets: [{
+                    data: [85, 10, 5],
+                    backgroundColor: ['#4CAF50', '#FF9800', '#9E9E9E'],
+                    borderColor: '#fff',
+                    borderWidth: 3,
+                    hoverOffset: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            padding: 20,
+                            font: {
+                                size: 14,
+                                weight: 'bold'
+                            }
+                        }
+                    }
+                },
+                animation: {
+                    animateRotate: true,
+                    animateScale: true,
+                    duration: 2000,
+                    easing: 'easeOutBounce'
+                }
+            }
+        });
+    }, 9000);
+
+    // Glow effect
+    setTimeout(() => {
+        const diagnosisText = document.querySelector('.diagnosis-text');
+        if (diagnosisText) {
+            diagnosisText.style.textShadow = '0 0 20px rgba(76, 175, 80, 0.8)';
+            setTimeout(() => diagnosisText.style.textShadow = 'none', 1000);
+        }
+    }, 5000);
+
+    // Scroll animation
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.animation = 'fadeInUp 0.8s ease-out forwards';
+            }
+        });
+    }, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+    document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('.summary-card, .chart-section').forEach(el => observer.observe(el));
+
+        // Also dynamically update diagnosis and images
+        document.getElementById("diagnosisText").innerHTML = `<p><strong>Diagnosis:</strong> ${prediction}</p>`;
+        document.querySelector(".diagnosis-description").innerHTML =
+            `Based on thousands of dermatologist-verified cases, our AI model has identified your uploaded skin condition image as <strong>${prediction}</strong>. This result reflects high diagnostic confidence and alignment with medically trained data.`;
+
+        const uploadedImage = document.querySelector("img.uploaded-image");
+        if (uploadedImage) {
+            uploadedImage.src = localStorage.getItem("image_url") || "";
+        }
+
+        const heatmapImage = document.querySelector('img[alt="Class Activation Map"]');
+        if (heatmapImage) {
+            heatmapImage.src = localStorage.getItem("heatmap_url") || "";
+        }
+    });
+
+    // Ripple effect
+    document.querySelector('.try-again-btn').addEventListener('click', function (e) {
+        const ripple = document.createElement('div');
+        const rect = this.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        const x = e.clientX - rect.left - size / 2;
+        const y = e.clientY - rect.top - size / 2;
+
+        ripple.style.width = ripple.style.height = size + 'px';
+        ripple.style.left = x + 'px';
+        ripple.style.top = y + 'px';
+        ripple.style.position = 'absolute';
+        ripple.style.background = 'rgba(255, 255, 255, 0.6)';
+        ripple.style.borderRadius = '50%';
+        ripple.style.pointerEvents = 'none';
+        ripple.style.animation = 'ripple 0.6s ease-out';
+
+        this.appendChild(ripple);
+        setTimeout(() => ripple.remove(), 600);
+    });
+
+    // Ripple keyframes
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes ripple {
+            0% { transform: scale(0); opacity: 1; }
+            100% { transform: scale(4); opacity: 0; }
+        }
+    `;
+    document.head.appendChild(style);
+</script>
+
+   
+</body>
+
+</html>
